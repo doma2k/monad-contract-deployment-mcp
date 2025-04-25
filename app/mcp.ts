@@ -1,17 +1,9 @@
-import { z } from "zod";
 import { initializeMcpApiHandler } from "../lib/mcp-api-handler";
+import { toolRegistry } from "./core/tools";
 
 export const mcpHandler = initializeMcpApiHandler(
   (server) => {
-    // Add more tools, resources, and prompts here
-    server.tool(
-      "echo",
-      "Returns the message you give it",
-      { message: z.string() },
-      async ({ message }) => ({
-        content: [{ type: "text", text: `Tool echo: ${message}` }],
-      })
-    );
+    toolRegistry(server);
   },
   {
     capabilities: {
