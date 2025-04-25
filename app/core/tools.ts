@@ -1,13 +1,55 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { createPublicClient, formatUnits, http } from "viem";
-import { monadTestnet } from "viem/chains";
+import { compileAndDeploy } from "./compiler";
+import { publicClient, walletClient } from "./clients";
+import { Abi, formatUnits, Hex } from "viem";
 
 export function toolRegistry(server: McpServer) {
-  const publicClient = createPublicClient({
-    chain: monadTestnet,
-    transport: http(),
-  });
+  server.tool(
+    "compile_and_deploy_a_solidity_contract",
+    "Compile solidity contract and deploy it to Monad testnet",
+    {
+      contract: z.string().describe("Solidity contract source code"),
+    },
+    async ({ contract }) => {
+      try {
+        const [abi, bytecode] = await compileAndDeploy(contract);
+        const hash = await walletClient.deployContract({
+          abi,
+          bytecode,
+          args: ["Initial message"],
+        });
+        return {
+          content: [
+            {
+              type: "text",
+              text: `${JSON.stringify(abi as Abi)}`,
+            },
+            {
+              type: "text",
+              text: `${bytecode as Hex}`,
+            },
+            {
+              type: "text",
+              text: `${hash}`,
+            },
+          ],
+        };
+      } catch (error) {
+        return {
+          content: [
+            {
+              type: "text" as const,
+              text: `Error generating contract: ${
+                error instanceof Error ? error.message : String(error)
+              }`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    }
+  );
 
   server.tool(
     // Tool ID
