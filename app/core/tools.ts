@@ -13,7 +13,7 @@ export function toolRegistry(server: McpServer) {
     },
     async ({ contract }) => {
       try {
-        const [abi, bytecode] = await compileAndDeploy(contract);
+        const result = await compileAndDeploy(contract);
         // const hash = await walletClient.deployContract({
         //   abi,
         //   bytecode,
@@ -23,11 +23,11 @@ export function toolRegistry(server: McpServer) {
           content: [
             {
               type: "text",
-              text: `${JSON.stringify(abi as Abi)}`,
+              text: `Contracts deployed successfully`,
             },
             {
               type: "text",
-              text: `${bytecode as Hex}`,
+              text: `${JSON.stringify(result)}`,
             },
             // {
             //   type: "text",
