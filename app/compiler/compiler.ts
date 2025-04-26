@@ -1,6 +1,6 @@
 const solc = require("solc");
 import { Hex, Abi } from "viem";
-
+import fs from "fs";
 export async function compileAndDeploy(
   sourceCode: string
 ): Promise<[Abi, Hex]> {
@@ -13,7 +13,11 @@ export async function compileAndDeploy(
       },
     };
 
-    const output = JSON.parse(solc.compile(JSON.stringify(input)));
+    const output = JSON.parse(
+      solc.compile(JSON.stringify(input), {
+        import: findImports,
+      })
+    );
 
     const contractNames = Object.keys(output.contracts["contract.sol"]);
     const contract = output.contracts["contract.sol"][contractNames[0]];
@@ -26,5 +30,16 @@ export async function compileAndDeploy(
     console.error("Compilation error details:", error);
     const errorMessage = error instanceof Error ? error.message : String(error);
     throw new Error(`Error compiling contract: ${errorMessage}`);
+  }
+}
+
+function findImports(path: string) {
+  if (path.includes("@openzeppelin")) {
+    const newPath = path.replace("@openzeppelin", process.cwd());
+    return {
+      contents: fs.readFileSync(newPath, "utf8"),
+    };
+  } else {
+    return { error: "File not found" };
   }
 }

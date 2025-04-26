@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { compileAndDeploy } from "./compiler";
+import { compileAndDeploy } from "../compiler/compiler";
 import { publicClient, walletClient } from "./clients";
 import { Abi, formatUnits, Hex } from "viem";
 
@@ -14,11 +14,11 @@ export function toolRegistry(server: McpServer) {
     async ({ contract }) => {
       try {
         const [abi, bytecode] = await compileAndDeploy(contract);
-        const hash = await walletClient.deployContract({
-          abi,
-          bytecode,
-          args: ["Initial message"],
-        });
+        // const hash = await walletClient.deployContract({
+        //   abi,
+        //   bytecode,
+        //   args: ["Initial message"],
+        // });
         return {
           content: [
             {
@@ -29,10 +29,10 @@ export function toolRegistry(server: McpServer) {
               type: "text",
               text: `${bytecode as Hex}`,
             },
-            {
-              type: "text",
-              text: `${hash}`,
-            },
+            // {
+            //   type: "text",
+            //   text: `${hash}`,
+            // },
           ],
         };
       } catch (error) {
