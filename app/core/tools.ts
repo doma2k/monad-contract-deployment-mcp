@@ -1,7 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { compileAndDeploy } from "../compiler/compiler";
-import { publicClient, walletClient } from "./clients";
+import { compileAndDeploy } from "./compiler";
+import { publicClient } from "./clients";
 import { Abi, formatUnits, Hex } from "viem";
 
 export function toolRegistry(server: McpServer) {
