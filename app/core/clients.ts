@@ -1,4 +1,4 @@
-import { createPublicClient, createWalletClient, http } from "viem";
+import { createPublicClient, http } from "viem";
 // import { privateKeyToAccount } from "viem/accounts";
 import { monadTestnet } from "viem/chains";
 
