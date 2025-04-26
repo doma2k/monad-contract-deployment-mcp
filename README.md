@@ -1,20 +1,50 @@
-# Example MCP Server built on Next.js
+# Monad SSE-based MCP Server built using Next.js
 
-## Usage
+## Monad Contracts !!! Build, Deploy, Ineract !!!.
 
-Update `app/mcp.ts` with your tools, prompts, and resources following the [MCP TypeScript SDK documentation](https://github.com/modelcontextprotocol/typescript-sdk/tree/main?tab=readme-ov-file#server).
+**This is MCP server to compile and deploy contracts directly from chat promt or compatible MCP client.**
 
-## Notes for running on Vercel
+## Current functionality implementations.
 
-- Requires a Redis attached to the project under `process.env.REDIS_URL`
-- Make sure you have [Fluid compute](https://vercel.com/docs/functions/fluid-compute) enabled for efficient execution
-- After enabling Fluid compute, open `app/sse/route.ts` and adjust max duration to 800 if you using a Vercel Pro or Enterprise account
-- [Deploy the Next.js MCP template](https://vercel.com/templates/next.js/model-context-protocol-mcp-with-next-js)
+- Captures Solidity smart contracts directly from chat promt.
+- Contract compilation and deployment on Monad Testnet.
+-
+-
+
+## Future implementations.
+
+- ENV integration (API keys, private keys).
+- Querying the Monad Network.
+- Deployed ABI's contracts storage.
+- Network intercations.
 
 ## Sample Client
 
 `script/test-client.mjs` contains a sample client to try invocations.
 
 ```sh
-node scripts/test-client.mjs https://mcp-for-next-js.vercel.app
+node scripts/test-client.mjs http://localhost:3000
 ```
+
+## How to use the server
+
+Go to `Cursor > Settings > Cursor Settings > MCP`
+
+![add_mcp](/static/add_mcp.png)
+
+Paste the following in the `mcp.json` file
+
+```json
+{
+  "mcpServers": {
+    ...
+    "monad-mcp-sse": {
+      "url": "https://model-context-protocol-mcp-with-next-js-azure.vercel.app/sse"
+    }
+  }
+}
+```
+
+# 🚧 Project Status: Under Development
+
+> ⚠️ **Warning:** This project is currently under active development and is not yet stable. Features may change, and things may break without notice.
