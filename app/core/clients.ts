@@ -2,16 +2,22 @@ import { createPublicClient, createWalletClient, http } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { monadTestnet } from "viem/chains";
 
-const signer = process.env.SIGNER_KEY || "0x";
-export const account = privateKeyToAccount(`0x${signer}`);
+export async function walletClient() {
+  const signer = process.env.SIGNER_KEY || "0x";
+  const account = privateKeyToAccount(`0x${signer}`);
 
-export const publicClient = createPublicClient({
-  chain: monadTestnet,
-  transport: http(),
-});
+  const walletClient = await createWalletClient({
+    account,
+    chain: monadTestnet,
+    transport: http(),
+  });
+  return walletClient;
+}
 
-export const walletClient = createWalletClient({
-  account,
-  chain: monadTestnet,
-  transport: http(),
-});
+export async function publicClient() {
+  const publicClient = await createPublicClient({
+    chain: monadTestnet,
+    transport: http(),
+  });
+  return publicClient;
+}

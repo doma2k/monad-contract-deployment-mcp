@@ -1,7 +1,8 @@
 const solc = require("solc");
 import { Hex, Abi } from "viem";
 import fs from "fs";
-export async function compileAndDeploy(
+
+export async function compileContracts(
   sourceCode: string
 ): Promise<{ [contractName: string]: { abi: Abi; hex: Hex } }> {
   try {

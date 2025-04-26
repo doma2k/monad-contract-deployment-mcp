@@ -1,38 +1,29 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { compileAndDeploy } from "./compiler";
+import { formatUnits } from "viem";
 import { publicClient } from "./clients";
-import { Abi, formatUnits, Hex } from "viem";
+import { deployContracts } from "./deploy";
+import { compileContracts } from "./compiler";
 
-export function toolRegistry(server: McpServer) {
+export async function toolRegistry(server: McpServer) {
+  const client = await publicClient();
+
   server.tool(
-    "compile_and_deploy_a_solidity_contract",
+    "compile-and-deploy",
     "Compile solidity contract and deploy it to Monad testnet",
     {
-      contract: z.string().describe("Solidity contract source code"),
+      contract: z.string().describe("Solidity contracts source code"),
     },
     async ({ contract }) => {
       try {
-        const result = await compileAndDeploy(contract);
-        // const hash = await walletClient.deployContract({
-        //   abi,
-        //   bytecode,
-        //   args: ["Initial message"],
-        // });
+        const compiledContracts = await compileContracts(contract);
+        const hashResults = await deployContracts(compiledContracts);
         return {
           content: [
             {
               type: "text",
-              text: `Contracts deployed successfully`,
+              text: `Contracts deployed successfully: ${hashResults}`,
             },
-            {
-              type: "text",
-              text: `${JSON.stringify(result)}`,
-            },
-            // {
-            //   type: "text",
-            //   text: `${hash}`,
-            // },
           ],
         };
       } catch (error) {
@@ -66,7 +57,7 @@ export function toolRegistry(server: McpServer) {
     async ({ address }) => {
       try {
         // Check MON balance for the input address
-        const balance = await publicClient.getBalance({
+        const balance = await client.getBalance({
           address: address as `0x${string}`,
         });
 
