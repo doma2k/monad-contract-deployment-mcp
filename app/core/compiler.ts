@@ -3,7 +3,7 @@ import { Hex, Abi } from "viem";
 import fs from "fs";
 export async function compileAndDeploy(
   sourceCode: string
-): Promise<[Abi, Hex]> {
+): Promise<{ [contractName: string]: { abi: Abi; hex: Hex } }> {
   try {
     const input = {
       language: "Solidity",
@@ -19,13 +19,18 @@ export async function compileAndDeploy(
       })
     );
 
-    const contractNames = Object.keys(output.contracts["contract.sol"]);
-    const contract = output.contracts["contract.sol"][contractNames[0]];
+    const contracts = output.contracts["contract.sol"];
+    const result: { [contractName: string]: { abi: Abi; hex: Hex } } = {};
 
-    const abi = contract.abi;
-    const bytecode = contract.evm.bytecode.object;
+    for (const contractName in contracts) {
+      const contract = contracts[contractName];
+      result[contractName] = {
+        abi: contract.abi as Abi,
+        hex: `0x${contract.evm.bytecode.object}` as Hex,
+      };
+    }
 
-    return [abi as Abi, `0x${bytecode}` as Hex];
+    return result;
   } catch (error: unknown) {
     console.error("Compilation error details:", error);
     const errorMessage = error instanceof Error ? error.message : String(error);
