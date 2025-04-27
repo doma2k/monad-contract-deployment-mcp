@@ -2,9 +2,7 @@ const solc = require("solc");
 import { Hex, Abi } from "viem";
 import fs from "fs";
 
-export async function compileContracts(
-  sourceCode: string
-): Promise<{ [contractName: string]: { abi: Abi; hex: Hex } }> {
+export async function compileContracts(sourceCode: string) {
   try {
     const input = {
       language: "Solidity",
@@ -21,13 +19,13 @@ export async function compileContracts(
     );
 
     const contracts = output.contracts["contract.sol"];
-    const result: { [contractName: string]: { abi: Abi; hex: Hex } } = {};
+    const result: { [contractName: string]: { abi: Abi; bytecode: Hex } } = {};
 
     for (const contractName in contracts) {
       const contract = contracts[contractName];
       result[contractName] = {
-        abi: contract.abi as Abi,
-        hex: `0x${contract.evm.bytecode.object}` as Hex,
+        abi: contract.abi,
+        bytecode: `0x${contract.evm.bytecode.object}`,
       };
     }
 

@@ -3,7 +3,6 @@ import { z } from "zod";
 import { formatUnits } from "viem";
 import { publicClient } from "./clients";
 import { deployContracts } from "./deploy";
-import { compileContracts } from "./compiler";
 
 export async function toolRegistry(server: McpServer) {
   const client = await publicClient();
@@ -13,16 +12,18 @@ export async function toolRegistry(server: McpServer) {
     "Compile solidity contract and deploy it to Monad testnet",
     {
       contract: z.string().describe("Solidity contracts source code"),
+      signerKey: z.string().describe("Signer private key"),
     },
-    async ({ contract }) => {
+    async ({ contract, signerKey }) => {
       try {
-        const compiledContracts = await compileContracts(contract);
-        const hashResults = await deployContracts(compiledContracts);
+        const deployedHashesList = await deployContracts(signerKey, contract);
         return {
           content: [
             {
               type: "text",
-              text: `Contracts deployed successfully: ${hashResults}`,
+              text: `Contracts deployed successfully:${JSON.stringify(
+                deployedHashesList
+              )}`,
             },
           ],
         };
