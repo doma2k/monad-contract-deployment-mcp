@@ -1,8 +1,13 @@
-# Monad SSE-based MCP Server built using Next.js
+> ⚠️ **Warning:** Noob builder, code could contain bugs and flaws.
 
-## Monad Contracts !!! Build, Deploy, Ineract !!!.
+_For learning [**monad-sse-mcp**](https://github.com/monad-developers/monad-sse-mcp) and [**evm-mcp-serve**](https://github.com/mcpdotdirect/evm-mcp-server) repos was used as example_
 
+# 🚀 Monad Contracts: Unleash the Power! 🚀
+
+**Build** 🛠️, **Deploy** 📤, **Interact** 🤝 — All in the _Monad Universe_!
 **This is MCP server to compile and deploy contracts directly from chat promt or compatible MCP client.**
+
+> Project focus around smart contracts interactions.
 
 ## Current functionality implementations.
 
@@ -11,26 +16,11 @@
 -
 -
 
-## Future implementations.
+## ⚙️ Supported connection types
 
-- ENV integration (API keys, private keys).
-- Querying the Monad Network.
-- Deployed ABI's contracts storage.
-- Network intercations.
+The server uses the following default configuration:
 
-## Sample Client
-
-`script/test-client.mjs` contains a sample client to try invocations.
-
-```sh
-node scripts/test-client.mjs http://localhost:3000
-```
-
-## How to use the server
-
-Go to `Cursor > Settings > Cursor Settings > MCP`
-
-![add_mcp](/static/add_mcp.png)
+## How to use SSE server
 
 Paste the following in the `mcp.json` file
 
@@ -43,6 +33,14 @@ Paste the following in the `mcp.json` file
     }
   }
 }
+```
+
+## Sample Client
+
+`script/test-client.mjs` contains a sample client to try invocations.
+
+```sh
+node scripts/test-client.mjs http://localhost:3000
 ```
 
 # 🚧 Project Status: Under Development

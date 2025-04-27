@@ -1,17 +1,84 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { formatUnits } from "viem";
-import { publicClient } from "./clients";
-import { deployContracts } from "./deploy";
+import { deployContracts } from "./services/deploy";
+import { privateKeyValidation, validateAddress } from "./services/utils";
+import { getETHBalance } from "./services/balance";
+import { privateKeyToAccount } from "viem/accounts";
 
 export async function toolRegistry(server: McpServer) {
-  const client = await publicClient();
+  server.tool(
+    "resolve-signer-address",
+    "Resolve the address of a signer",
+    {
+      signerKey: z.string().describe("Signer private key"),
+    },
+    async ({ signerKey }) => {
+      const resolvedAddress = privateKeyToAccount(
+        privateKeyValidation(signerKey)
+      );
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Signer address: ${resolvedAddress.address}`,
+          },
+        ],
+      };
+    }
+  );
+
+  server.tool(
+    "get_balance",
+    "Get the Monad token balance for an address",
+    {
+      address: z
+        .string()
+        .describe(
+          "The wallet address (e.g., '0x1234...') to check the balance for"
+        ),
+    },
+    async ({ address }) => {
+      try {
+        const validatedAddress = validateAddress(address);
+        const balance = await getETHBalance(validatedAddress);
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(
+                {
+                  address,
+                  wei: balance.wei.toString(),
+                  ether: balance.ether,
+                },
+                null,
+                2
+              ),
+            },
+          ],
+        };
+      } catch (error) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Error fetching balance: ${
+                error instanceof Error ? error.message : String(error)
+              }`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    }
+  );
 
   server.tool(
     "compile-and-deploy",
     "Compile solidity contract and deploy it to Monad testnet",
     {
-      contract: z.string().describe("Solidity contracts source code"),
+      contract: z.string().describe("Solidity contract source code"),
       signerKey: z.string().describe("Signer private key"),
     },
     async ({ contract, signerKey }) => {
@@ -38,50 +105,6 @@ export async function toolRegistry(server: McpServer) {
             },
           ],
           isError: true,
-        };
-      }
-    }
-  );
-
-  server.tool(
-    // Tool ID
-    "get-mon-balance",
-    // Description of what the tool does
-    "Get MON balance for an address on Monad testnet",
-    // Input schema
-    {
-      address: z
-        .string()
-        .describe("Monad testnet address to check balance for"),
-    },
-    // Tool implementation
-    async ({ address }) => {
-      try {
-        // Check MON balance for the input address
-        const balance = await client.getBalance({
-          address: address as `0x${string}`,
-        });
-
-        // Return a human friendly message indicating the balance.
-        return {
-          content: [
-            {
-              type: "text",
-              text: `Balance for ${address}: ${formatUnits(balance, 18)} MON`,
-            },
-          ],
-        };
-      } catch (error) {
-        // If the balance check process fails, return a graceful message back to the MCP client indicating a failure.
-        return {
-          content: [
-            {
-              type: "text",
-              text: `Failed to retrieve balance for address: ${address}. Error: ${
-                error instanceof Error ? error.message : String(error)
-              }`,
-            },
-          ],
         };
       }
     }
