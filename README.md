@@ -27,6 +27,10 @@ The server uses the following default configuration:
 
 ## How to use SSE server
 
+# Monad Contract Deployment MCP **DEMO**
+
+![Demo Animation](./public/gif.gif)
+
 Paste the following in the `mcp.json` file
 
 ```json
