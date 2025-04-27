@@ -1,7 +1,12 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { deployContracts } from "./services/deploy";
-import { privateKeyValidation, validateAddress } from "./services/utils";
+import {
+  privateKeyValidation,
+  validateAddress,
+  utils,
+  formatContractMap,
+} from "./services/utils";
 import { getETHBalance } from "./services/balance";
 import { privateKeyToAccount } from "viem/accounts";
 
@@ -83,13 +88,17 @@ export async function toolRegistry(server: McpServer) {
     },
     async ({ contract, signerKey }) => {
       try {
-        const deployedHashesList = await deployContracts(signerKey, contract);
+        const deployTxHash = await deployContracts(signerKey, contract);
+        const contractMap = formatContractMap(deployTxHash);
+
         return {
           content: [
             {
               type: "text",
               text: `Contracts deployed successfully:${JSON.stringify(
-                deployedHashesList
+                contractMap,
+                null,
+                2
               )}`,
             },
           ],

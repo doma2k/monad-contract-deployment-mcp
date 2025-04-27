@@ -29,7 +29,7 @@ Paste the following in the `mcp.json` file
   "mcpServers": {
     ...
     "monad-mcp-sse": {
-      "url": "https://model-context-protocol-mcp-with-next-js-azure.vercel.app/sse"
+      "url": "https://vercel.app/sse"
     }
   }
 }

@@ -10,6 +10,7 @@ import {
   Hex,
   Address,
 } from "viem";
+import { StringKeyedObject } from "./types";
 /**
  * Utility functions for formatting and parsing values
  */
@@ -66,4 +67,18 @@ export function validateAddress(address: string): Address {
   }
   // Ensure the address is lowercase and properly formatted
   return address.toLowerCase() as Address;
+}
+
+export function formatContractMap(deployTxHash: StringKeyedObject[]) {
+  const contractMap = deployTxHash.reduce(
+    (acc: { [key: string]: string }, obj: StringKeyedObject) => {
+      const key = Object.keys(obj)[0];
+      const address = (obj[key] as { contractAddress?: string })
+        .contractAddress;
+      if (address) acc[key] = address as `0x${string}`;
+      return acc;
+    },
+    {}
+  );
+  return contractMap;
 }
