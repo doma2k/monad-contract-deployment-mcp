@@ -14,7 +14,12 @@ _For learning [**monad-sse-mcp**](https://github.com/monad-developers/monad-sse-
 - **Deploy contracts** single or multiple in one call by `compile-and-deploy`
 - **Resolve Address** from private with `resolve-signer-address`
 - **Check Balance** of wallet from dialog context with `get-balance`
--
+- .......
+
+### 💡 To implement
+
+- Deployed contracts Abi storage
+- Interaction and Event Monitoring logic
 
 ## ⚙️ Supported connection types
 
@@ -29,7 +34,7 @@ Paste the following in the `mcp.json` file
   "mcpServers": {
     ...
     "monad-mcp-sse": {
-      "url": "https://vercel.app/sse"
+      "url": "https://https://monad-contract-deployment-mcp.vercel.app/sse"
     }
   }
 }

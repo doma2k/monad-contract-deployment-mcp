@@ -1,6 +1,6 @@
 const solc = require("solc");
-import { Hex, Abi } from "viem";
 import fs from "fs";
+import { StringKeyedObject } from "./types";
 
 export async function compileContracts(sourceCode: string) {
   try {
@@ -19,7 +19,7 @@ export async function compileContracts(sourceCode: string) {
     );
 
     const contracts = output.contracts["contract.sol"];
-    const result: { [contractName: string]: { abi: Abi; bytecode: Hex } } = {};
+    const result: StringKeyedObject = {};
 
     for (const contractName in contracts) {
       const contract = contracts[contractName];
