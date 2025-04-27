@@ -33,7 +33,7 @@ export async function toolRegistry(server: McpServer) {
   );
 
   server.tool(
-    "get_balance",
+    "get-balance",
     "Get the Monad token balance for an address",
     {
       address: z

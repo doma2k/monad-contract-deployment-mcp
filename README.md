@@ -9,11 +9,11 @@ _For learning [**monad-sse-mcp**](https://github.com/monad-developers/monad-sse-
 
 > Project focus around smart contracts interactions.
 
-## Current functionality implementations.
+### ✨ Features
 
-- Captures Solidity smart contracts directly from chat promt.
-- Contract compilation and deployment on Monad Testnet.
--
+- **Deploy contracts** single or multiple in one call by `compile-and-deploy`
+- **Resolve Address** from private with `resolve-signer-address`
+- **Check Balance** of wallet from dialog context with `get-balance`
 -
 
 ## ⚙️ Supported connection types

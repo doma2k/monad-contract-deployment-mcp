@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "dev:with-redis": "./scripts/dev.sh",
     "build": "next build",
     "start": "next start",
     "test:imports": "node scripts/test-imports.js"
